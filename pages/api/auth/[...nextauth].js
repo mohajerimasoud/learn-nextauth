@@ -5,7 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 async function refreshAccessToken(tokenObject) {
   try {
     // Get a new set of tokens with a refreshToken
-    console.log(`----- tokenObject`, tokenObject);
+    // console.log(`----- tokenObject`, tokenObject);
     const tokenResponse = await axios.post(
       `https://lawone.vaslapp.com/oauth/token?refresh_token=${tokenObject.refreshToken}&grant_type=refresh_token`,
       {
@@ -35,7 +35,7 @@ const providers = [
         // Authenticate user with credentials
         const formData = new URLSearchParams();
         formData.append("grant_type", "password");
-        formData.append("username", credentials.useename);
+        formData.append("username", credentials.username);
         formData.append("password", credentials.password);
 
         const user = await axios.post(
@@ -59,8 +59,6 @@ const providers = [
 
         return tokenOutput;
       } catch (e) {
-        // console.log(`------ auth callback CredentialsProvider : catch  ${e}`);
-
         throw new Error(e);
       }
     },
@@ -69,7 +67,12 @@ const providers = [
 
 const callbacks = {
   jwt: async ({ token, user, account }) => {
-    console.log("------ auth callback jwt: token, user", token, user);
+    console.log(
+      "------ auth callback jwt: token, user, account ",
+      token,
+      user,
+      account
+    );
     if (account && user) {
       console.log("------ auth callback jwt: initial signin");
 
@@ -91,8 +94,8 @@ const callbacks = {
     }
 
     // If the call arrives after 23 hours have passed, we allow to refresh the token.
-    console.log("------ auth callback jwt:refreshAccessToken(token)");
-
+    // console.log("------ auth callback jwt:refreshAccessToken(token)");
+    // console.log("---- token", token);
     return refreshAccessToken(token);
   },
   async session({ session, token }) {
