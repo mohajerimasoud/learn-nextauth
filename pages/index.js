@@ -2,6 +2,7 @@ import styles from "../styles/Home.module.css";
 import { signIn, signOut } from "next-auth/react";
 import { useSession, getProviders } from "next-auth/react";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -21,6 +22,9 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
+      <div>
+        <Link href={"/banana"}>go to fruits</Link>
+      </div>
       <button
         onClick={() =>
           signIn("credentials", {
