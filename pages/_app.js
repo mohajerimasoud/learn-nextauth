@@ -2,7 +2,7 @@ import { SessionProvider } from "next-auth/react";
 import { useState } from "react";
 
 function MyApp({ Component, pageProps }) {
-  const [interval, setInterval] = useState(0);
+  const [interval, setInterval] = useState(1000000);
 
   return (
     <SessionProvider session={pageProps.session} refetchInterval={interval}>
