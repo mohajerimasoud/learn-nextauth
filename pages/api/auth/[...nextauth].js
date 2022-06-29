@@ -3,11 +3,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 async function refreshAccessToken(tokenObject) {
-  console.log("==== Auth report : refreshAccessToken called", tokenObject);
-
   try {
-    // Get a new set of tokens with a refreshToken
-    // console.log(`----- tokenObject`, tokenObject);
     const tokenResponse = await axios.post(
       `https://lawone.vaslapp.com/oauth/token?grant_type=refresh_token&refresh_token=${tokenObject}`,
       {},
@@ -17,10 +13,6 @@ async function refreshAccessToken(tokenObject) {
         },
       }
     );
-    console.log(
-      "----- get new token report ",
-      tokenResponse.data.accessTokenExpiry
-    );
 
     return {
       ...tokenObject,
@@ -29,7 +21,6 @@ async function refreshAccessToken(tokenObject) {
       refreshToken: tokenResponse.data.accessTokenExpiry,
     };
   } catch (error) {
-    console.log("==== Auth report : refresh token error ", error?.message);
     return {
       ...tokenObject,
       error: "RefreshAccessTokenError",
@@ -45,8 +36,6 @@ const providers = [
       password: { label: "Password", type: "password" },
     },
     authorize: async (credentials) => {
-      console.log("==== Auth report : providers=>authorize called");
-
       try {
         const formData = new URLSearchParams();
 
@@ -85,12 +74,10 @@ const providers = [
 
 const callbacks = {
   async jwt(props) {
-    console.log("----- auth callback jwt: props ", props);
     if (
       props?.user?.accessTokenExpiry < Date.now() &&
       props?.user?.refreshToken
     ) {
-      console.log("==== Auth report : jwt need refresh the token");
       refreshAccessToken(props?.user?.refreshToken);
     }
     return props;
