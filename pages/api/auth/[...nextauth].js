@@ -57,14 +57,13 @@ const providers = [
         if (!user.data) {
           return null;
         }
+        // const tokenOutput = {
+        //   accessToken: user.data.access_token,
+        //   refreshToken: user.data.refresh_token,
+        //   accessTokenExpiry: user.data.expires_in * 1000 + Date.now(), // absolute time that token expires
+        // };
 
-        const tokenOutput = {
-          accessToken: user.data.access_token,
-          refreshToken: user.data.refresh_token,
-          accessTokenExpiry: user.data.expires_in * 1000 + Date.now(), // absolute time that token expires
-        };
-
-        return tokenOutput;
+        return user.data;
       } catch (e) {
         throw new Error(e);
       }
@@ -73,17 +72,19 @@ const providers = [
 ];
 
 const callbacks = {
-  async jwt(props) {
-    if (
-      props?.user?.accessTokenExpiry < Date.now() &&
-      props?.user?.refreshToken
-    ) {
-      refreshAccessToken(props?.user?.refreshToken);
-    }
-    return props;
+  jwt: async ({ token, user }) => {
+    // if (
+    //   props?.user?.accessTokenExpiry < Date.now() &&
+    //   props?.user?.refreshToken
+    // ) {
+    //   refreshAccessToken(props?.user?.refreshToken);
+    // }
+    user && (token.user = user);
+    return token;
   },
-  async session(props) {
-    return props;
+  session: async ({ session, token }) => {
+    session.user = token.user;
+    return session;
   },
 };
 
