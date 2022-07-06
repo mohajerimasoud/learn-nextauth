@@ -26,7 +26,7 @@ HttpService.interceptors.request.use(
     const accessToken = session.user.access_token;
 
     if (headers && accessToken) {
-      headers.Authorization = `Bearerr ${accessToken}`;
+      headers.Authorization = `Bearer ${accessToken}`;
     }
 
     return config;
