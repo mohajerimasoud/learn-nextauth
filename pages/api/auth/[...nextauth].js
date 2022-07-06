@@ -4,7 +4,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { signOut } from "next-auth/react";
 
 async function refreshAccessToken(tokenObject) {
-  // console.log("refreshAccessToken");
   try {
     const tokenResponse = await axios.post(
       `https://lawone.vaslapp.com/oauth/token?grant_type=refresh_token&refresh_token=${tokenObject}`,
@@ -21,7 +20,6 @@ async function refreshAccessToken(tokenObject) {
       expires_at: tokenResponse.data.expires_in * 1000 + Date.now(),
     };
 
-    // console.log("refresh", outputData);
     return outputData;
   } catch (error) {
     return {
